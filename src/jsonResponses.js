@@ -24,8 +24,10 @@ const getJoke = () => {
   return JSON.stringify(jokes[num]);
 };
 
-const getJokes = (num) => {
-  if (!num) num = 1;
+const getJokes = (limit) => {
+  let num;
+  if (!limit) num = 1;
+  else num = limit;
   num = Math.floor(num);
   num = num < 1 ? 1 : num;
   num = num > jokes.length ? jokes.length : num;
