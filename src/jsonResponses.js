@@ -1,3 +1,5 @@
+const underscore = require('underscore');
+
 const jokes = [
   { q: 'What do you call a very small valentine?', a: 'A valen-tiny!' },
   { q: 'What did the dog say when he rubbed his tail on the sandpaper?', a: 'Ruff, Ruff!' },
@@ -22,12 +24,36 @@ const getJoke = () => {
   return JSON.stringify(jokes[num]);
 };
 
+const getJokes = (num) => {
+  if (!num) num = 1;
+  num = Math.floor(num);
+  num = num < 1 ? 1 : num;
+  num = num > jokes.length ? jokes.length : num;
+
+  const shufJokes = underscore.shuffle(jokes);
+
+  const output = [];
+
+  for (let i = 0; i < num; i += 1) {
+    output.push(shufJokes[i]);
+  }
+
+  return JSON.stringify(output);
+};
+
 const getRandomJokeResponse = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'application/json' });
   response.write(getJoke());
   response.end();
 };
 
+const getRandomJokesResponse = (request, response, params) => {
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+  response.write(getJokes(params.limit));
+  response.end();
+};
+
 module.exports = {
   getRandomJokeResponse,
+  getRandomJokesResponse,
 };
