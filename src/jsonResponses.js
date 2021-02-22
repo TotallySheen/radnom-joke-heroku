@@ -43,16 +43,61 @@ const getJokes = (limit) => {
   return JSON.stringify(output);
 };
 
-const getRandomJokeResponse = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(getJoke());
-  response.end();
+const getJokeXML = () => {
+  const num = Math.floor(Math.random() * 16);
+  const responseXML = `
+      <joke>
+        <q>${jokes[num].q}</q>
+        <a>${jokes[num].a}</a>
+      </joke>
+    `;
+  return responseXML;
 };
 
-const getRandomJokesResponse = (request, response, params) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(getJokes(params.limit));
-  response.end();
+const getJokesXML = (limit) => {
+  let num;
+  if (!limit) num = 1;
+  else num = limit;
+  num = Math.floor(num);
+  num = num < 1 ? 1 : num;
+  num = num > jokes.length ? jokes.length : num;
+
+  const shufJokes = underscore.shuffle(jokes);
+  let responseXML = '<jokes>';
+  for (let i = 0; i < num; i += 1) {
+    responseXML += `
+    <joke>
+      <q>${shufJokes[i].q}</q>
+      <a>${shufJokes[i].a}</a>
+    </joke>
+  `;
+  }
+  responseXML += '</jokes>';
+  return responseXML;
+};
+
+const getRandomJokeResponse = (request, response, params, acceptedTypes) => {
+  if (acceptedTypes.includes('text/xml')) {
+    response.writeHead(200, { 'Content-Type': 'text/xml' });
+    response.write(getJokeXML());
+    response.end();
+  } else {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(getJoke());
+    response.end();
+  }
+};
+
+const getRandomJokesResponse = (request, response, params, acceptedTypes) => {
+  if (acceptedTypes.includes('text/xml')) {
+    response.writeHead(200, { 'Content-Type': 'text/xml' });
+    response.write(getJokesXML(params.limit));
+    response.end();
+  } else {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(getJokes(params.limit));
+    response.end();
+  }
 };
 
 module.exports = {
