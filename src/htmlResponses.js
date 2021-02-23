@@ -1,23 +1,24 @@
 // 5 - here's our 404 page
+const fs = require('fs');
+const { request } = require('http');
 
-const errorPage = `
-<html>
-  <head>
-    <title>404 - File Not Found!</title>
-  </head>
-  <body>
-    <h1>404 - File Not Found!</h1>
-    <p>Check your URL or your typing!!</p>
-    <p>Perhaps you are looking for <a href="/random-joke">/random-joke</a> or <a href="/random-jokes?limit=10">/random-jokes?limit=10</a> ?</p>
-  </body>
-</html>`;
+const error = fs.readFileSync(`${__dirname}/../client/error.html`);
+const style = fs.readFileSync(`${__dirname}/../client/default-styles.css`);
+
 
 const get404Response = (request, response) => {
   response.writeHead(404, { 'Content-Type': 'text/html' });
-  response.write(errorPage);
+  response.write(error);
   response.end();
 };
 
+const getStyles = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'text/css' });
+  response.write(style);
+  response.end();
+}
+
 module.exports = {
   get404Response,
+  getStyles
 };

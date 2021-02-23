@@ -76,26 +76,52 @@ const getJokesXML = (limit) => {
   return responseXML;
 };
 
-const getRandomJokeResponse = (request, response, params, acceptedTypes) => {
+const getBinarySize = string => Buffer.byteLength(string, 'utf8');
+
+const getRandomJokeResponse = (request, response, params, acceptedTypes, httpMethod) => {
   if (acceptedTypes.includes('text/xml')) {
-    response.writeHead(200, { 'Content-Type': 'text/xml' });
-    response.write(getJokeXML());
+    if (httpMethod === 'GET'){
+      response.writeHead(200, { 'Content-Type': 'text/xml' });
+      response.write(getJokeXML());
+    }
+    else if (httpMethod === 'HEAD'){
+      const size = getBinarySize(getJokeXML());
+      response.writeHead(200, { 'Content-Type': 'text/xml' , 'Content-Length': size});
+    }
     response.end();
   } else {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(getJoke());
+    if (httpMethod === 'GET'){
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.write(getJoke());
+    }
+    else if (httpMethod === 'HEAD'){
+      const size = getBinarySize(getJoke());
+      response.writeHead(200, { 'Content-Type': 'application/json' , 'Content-Length': size});
+    }
     response.end();
   }
 };
 
-const getRandomJokesResponse = (request, response, params, acceptedTypes) => {
+const getRandomJokesResponse = (request, response, params, acceptedTypes, httpMethod) => {
   if (acceptedTypes.includes('text/xml')) {
-    response.writeHead(200, { 'Content-Type': 'text/xml' });
-    response.write(getJokesXML(params.limit));
+    if (httpMethod === 'GET'){
+      response.writeHead(200, { 'Content-Type': 'text/xml' });
+      response.write(getJokesXML(params.limit));
+    }
+    else if (httpMethod === 'HEAD'){
+      const size = getBinarySize(getJokesXML(params.limit));
+      response.writeHead(200, { 'Content-Type': 'text/xml' , 'Content-Length': size});
+    }
     response.end();
   } else {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(getJokes(params.limit));
+    if (httpMethod === 'GET'){
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.write(getJokes(params.limit));
+    }
+    else if (httpMethod === 'HEAD'){
+      const size = getBinarySize(getJokes(params.limit));
+      response.writeHead(200, { 'Content-Type': 'application/json' , 'Content-Length': size});
+    }
     response.end();
   }
 };

@@ -7,6 +7,7 @@ const jsonHandler = require('./jsonResponses.js');
 const urlStruct = {
   '/random-joke': jsonHandler.getRandomJokeResponse,
   '/random-jokes': jsonHandler.getRandomJokesResponse,
+  '/default-styles.css': htmlHandler.getStyles,
   notFound: htmlHandler.get404Response,
 };
 
@@ -25,7 +26,7 @@ const onRequest = (request, response) => {
   const params = query.parse(parsedUrl.query);
 
   if (urlStruct[pathname]) {
-    urlStruct[pathname](request, response, params, acceptedTypes);
+    urlStruct[pathname](request, response, params, acceptedTypes, request.method);
   } else {
     urlStruct.notFound(request, response);
   }
