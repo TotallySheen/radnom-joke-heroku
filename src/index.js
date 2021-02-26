@@ -7,6 +7,7 @@ const jsonHandler = require('./jsonResponses.js');
 const urlStruct = {
   '/random-joke': jsonHandler.getRandomJokeResponse,
   '/random-jokes': jsonHandler.getRandomJokesResponse,
+  '/joke-client': htmlHandler.getJokeClientResponse,
   '/default-styles.css': htmlHandler.getStyles,
   notFound: htmlHandler.get404Response,
 };
